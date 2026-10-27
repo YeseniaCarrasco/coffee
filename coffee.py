@@ -7,7 +7,8 @@ MEAN_INTERARRIVAL = 3.0    # about one customer every three minutes
 MIN_ORDER, MAX_ORDER = 1.0, 4.0
 
 
-def simulate(rng):
+def simulate_morning(rng):
+    """Return (arrival minutes after opening, wait in minutes) for each customer."""
     # Draw more gaps than we could need, then keep arrivals before closing.
     gaps = rng.exponential(MEAN_INTERARRIVAL, size=int(OPEN_MINUTES / MEAN_INTERARRIVAL * 3))
     arrivals = np.cumsum(gaps)
@@ -22,7 +23,11 @@ def simulate(rng):
         waits[i] = start - arrival
         barista_free_at = start + order_time
 
-    return waits
+    return arrivals, waits
+
+
+def simulate(rng):
+    return simulate_morning(rng)[1]
 
 
 def main():
